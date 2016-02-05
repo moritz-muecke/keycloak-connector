@@ -1,0 +1,94 @@
+{
+  "minMuleVersion": "3.5.0",
+  "requiresEntitlement": false,
+  "requiresEnterpriseLicense": false,
+  "configs": [
+    {
+      "configElementName": "config",
+      "attributes": [
+        {
+          "javaTypeName": "String",
+          "fullQualifiedJavaTypeName": "java.lang.String",
+          "defaultValue": "http://localhost",
+          "isOptional": true,
+          "isRefOnly": false,
+          "isPayload": false,
+          "isComplexType": false,
+          "isEnum": false,
+          "isString": true,
+          "typeMirror": "java.lang.String",
+          "isHttpCallback": false,
+          "isArrayOrListOrMap": false,
+          "javaName": "keycloakUrl",
+          "description": "Keycloak Server URL"
+        },
+        {
+          "javaTypeName": "Integer",
+          "fullQualifiedJavaTypeName": "int",
+          "defaultValue": "8080",
+          "isOptional": true,
+          "isRefOnly": false,
+          "isPayload": false,
+          "isComplexType": false,
+          "isEnum": false,
+          "isString": false,
+          "typeMirror": "int",
+          "isHttpCallback": false,
+          "isArrayOrListOrMap": false,
+          "javaName": "keycloakPort",
+          "description": "Keycloak Server Port"
+        }
+      ],
+      "javaName": "ConnectorConfig",
+      "friendlyName": "Configuration",
+      "type": "ConfigurationConfig"
+    }
+  ],
+  "attributes": [],
+  "processors": [
+    {
+      "isPaged": false,
+      "isBatch": false,
+      "samples": [],
+      "javaReturnType": {
+        "javaTypeName": "",
+        "fullQualifiedJavaTypeName": "void",
+        "isOptional": false,
+        "isRefOnly": false,
+        "isPayload": false,
+        "isComplexType": false,
+        "isEnum": false,
+        "isString": false,
+        "isHttpCallback": false,
+        "description": "A greeting message"
+      },
+      "parameters": [
+        {
+          "javaTypeName": "String",
+          "fullQualifiedJavaTypeName": "java.lang.String",
+          "isOptional": false,
+          "isRefOnly": false,
+          "isPayload": false,
+          "isComplexType": false,
+          "isEnum": false,
+          "isString": true,
+          "typeMirror": "java.lang.String",
+          "isHttpCallback": false,
+          "isArrayOrListOrMap": false,
+          "javaName": "frie"
+        }
+      ],
+      "apiDocUrl": "",
+      "javaName": "createUser",
+      "friendlyName": "Create user",
+      "description": "Custom processor",
+      "xsdName": "create-user"
+    }
+  ],
+  "filters": [],
+  "transformers": [],
+  "sources": [],
+  "javaName": "KeycloakConnector",
+  "friendlyName": "Keycloak",
+  "xsdName": "keycloak"
+}
