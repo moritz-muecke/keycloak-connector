@@ -26,26 +26,31 @@
               <xs:documentation>Keycloak Server Port</xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute type="xs:string" use="required" name="adminUser">
+            <xs:annotation>
+              <xs:documentation>Keycloak administration User</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="xs:string" use="required" name="adminPassword">
+            <xs:annotation>
+              <xs:documentation>Keycloak administration User password</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
-  <xs:element xmlns="http://www.mulesoft.org/schema/mule/keycloak" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="Create-userType" substitutionGroup="mule:abstract-message-processor" name="create-user">
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/keycloak" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="Create-user-from-payloadType" substitutionGroup="mule:abstract-message-processor" name="create-user-from-payload">
     <xs:annotation>
-      <xs:documentation>Custom processor</xs:documentation>
+      <xs:documentation>Creates a user from json</xs:documentation>
     </xs:annotation>
   </xs:element>
-  <xs:complexType name="Create-userType">
+  <xs:complexType name="Create-user-from-payloadType">
     <xs:complexContent>
       <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
         <xs:attribute type="xs:string" use="required" name="config-ref">
           <xs:annotation>
             <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
-        <xs:attribute type="xs:string" use="required" name="frie">
-          <xs:annotation>
-            <xs:documentation></xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>

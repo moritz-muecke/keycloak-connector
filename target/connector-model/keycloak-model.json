@@ -37,6 +37,36 @@
           "isArrayOrListOrMap": false,
           "javaName": "keycloakPort",
           "description": "Keycloak Server Port"
+        },
+        {
+          "javaTypeName": "String",
+          "fullQualifiedJavaTypeName": "java.lang.String",
+          "isOptional": false,
+          "isRefOnly": false,
+          "isPayload": false,
+          "isComplexType": false,
+          "isEnum": false,
+          "isString": true,
+          "typeMirror": "java.lang.String",
+          "isHttpCallback": false,
+          "isArrayOrListOrMap": false,
+          "javaName": "adminUser",
+          "description": "Keycloak administration User"
+        },
+        {
+          "javaTypeName": "String",
+          "fullQualifiedJavaTypeName": "java.lang.String",
+          "isOptional": false,
+          "isRefOnly": false,
+          "isPayload": false,
+          "isComplexType": false,
+          "isEnum": false,
+          "isString": true,
+          "typeMirror": "java.lang.String",
+          "isHttpCallback": false,
+          "isArrayOrListOrMap": false,
+          "javaName": "adminPassword",
+          "description": "Keycloak administration User password"
         }
       ],
       "javaName": "ConnectorConfig",
@@ -60,29 +90,14 @@
         "isEnum": false,
         "isString": false,
         "isHttpCallback": false,
-        "description": "A greeting message"
+        "description": ""
       },
-      "parameters": [
-        {
-          "javaTypeName": "String",
-          "fullQualifiedJavaTypeName": "java.lang.String",
-          "isOptional": false,
-          "isRefOnly": false,
-          "isPayload": false,
-          "isComplexType": false,
-          "isEnum": false,
-          "isString": true,
-          "typeMirror": "java.lang.String",
-          "isHttpCallback": false,
-          "isArrayOrListOrMap": false,
-          "javaName": "frie"
-        }
-      ],
+      "parameters": [],
       "apiDocUrl": "",
-      "javaName": "createUser",
-      "friendlyName": "Create user",
-      "description": "Custom processor",
-      "xsdName": "create-user"
+      "javaName": "createUserFromPayload",
+      "friendlyName": "Create user from payload",
+      "description": "Creates a user from json",
+      "xsdName": "create-user-from-payload"
     }
   ],
   "filters": [],

@@ -11,7 +11,7 @@ import org.mule.modules.keycloak.config.ConnectorConfig;
  * 
  */
 @SuppressWarnings("all")
-@Generated(value = "Mule DevKit Version 3.8.0", date = "2016-02-05T03:04:00+01:00", comments = "Build UNNAMED.2762.e3b1307")
+@Generated(value = "Mule DevKit Version 3.8.0", date = "2016-02-10T03:00:36+01:00", comments = "Build UNNAMED.2762.e3b1307")
 public class KeycloakConnectorConnectorConfigBasicAdapter
     extends KeycloakConnectorProcessAdapter
 {
