@@ -1,5 +1,6 @@
 package org.mule.modules.keycloak.automation.unit
 
+import org.mule.modules.keycloak.client.service.UserService
 import org.mule.modules.keycloak.client.service.v18.UserServiceV18
 import org.mule.modules.keycloak.config.KeycloakAdminConfig
 import spock.lang.Specification
@@ -9,6 +10,6 @@ import spock.lang.Specification
  */
 class UserServiceV18Spec extends Specification{
     KeycloakAdminConfig config = Mock(KeycloakAdminConfig)
-    UserServiceV18 userService = new UserServiceV18(config)
+    UserService userService = new UserServiceV18(config)
 
 }
