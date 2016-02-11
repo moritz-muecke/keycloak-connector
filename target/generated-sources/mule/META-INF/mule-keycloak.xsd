@@ -36,21 +36,31 @@
               <xs:documentation>Keycloak administration User password</xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute type="xs:string" use="required" name="realm">
+            <xs:annotation>
+              <xs:documentation>Keycloak Realm to administrate</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
-  <xs:element xmlns="http://www.mulesoft.org/schema/mule/keycloak" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="Create-user-from-payloadType" substitutionGroup="mule:abstract-message-processor" name="create-user-from-payload">
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/keycloak" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="Get-user-by-idType" substitutionGroup="mule:abstract-message-processor" name="get-user-by-id">
     <xs:annotation>
       <xs:documentation>Creates a user from json</xs:documentation>
     </xs:annotation>
   </xs:element>
-  <xs:complexType name="Create-user-from-payloadType">
+  <xs:complexType name="Get-user-by-idType">
     <xs:complexContent>
       <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
         <xs:attribute type="xs:string" use="required" name="config-ref">
           <xs:annotation>
             <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="id">
+          <xs:annotation>
+            <xs:documentation>The id of the user which should be returned</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>

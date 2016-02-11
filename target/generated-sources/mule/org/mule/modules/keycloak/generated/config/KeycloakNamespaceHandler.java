@@ -14,7 +14,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * 
  */
 @SuppressWarnings("all")
-@Generated(value = "Mule DevKit Version 3.8.0", date = "2016-02-10T03:00:36+01:00", comments = "Build UNNAMED.2762.e3b1307")
+@Generated(value = "Mule DevKit Version 3.8.0", date = "2016-02-11T03:42:22+01:00", comments = "Build UNNAMED.2762.e3b1307")
 public class KeycloakNamespaceHandler
     extends NamespaceHandlerSupport
 {
@@ -44,9 +44,9 @@ public class KeycloakNamespaceHandler
             handleException("config", "@Config", ex);
         }
         try {
-            this.registerBeanDefinitionParser("create-user-from-payload", new CreateUserFromPayloadDefinitionParser());
+            this.registerBeanDefinitionParser("get-user-by-id", new GetUserByIdDefinitionParser());
         } catch (NoClassDefFoundError ex) {
-            handleException("create-user-from-payload", "@Processor", ex);
+            handleException("get-user-by-id", "@Processor", ex);
         }
     }
 

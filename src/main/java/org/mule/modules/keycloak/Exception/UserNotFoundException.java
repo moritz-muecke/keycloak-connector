@@ -1,4 +1,4 @@
-package org.mule.modules.keycloak.Exception;
+package org.mule.modules.keycloak.exception;
 
 /**
  * Created by moritz.moeller on 10.02.2016.

@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 @SuppressWarnings("all")
-@Generated(value = "Mule DevKit Version 3.8.0", date = "2016-02-10T03:00:36+01:00", comments = "Build UNNAMED.2762.e3b1307")
+@Generated(value = "Mule DevKit Version 3.8.0", date = "2016-02-11T03:42:22+01:00", comments = "Build UNNAMED.2762.e3b1307")
 public class KeycloakConnectorLifecycleInjectionAdapter
     extends KeycloakConnectorMetadataAdapter
     implements MuleContextAware, Disposable, Initialisable, Startable, Stoppable
@@ -34,6 +34,7 @@ public class KeycloakConnectorLifecycleInjectionAdapter
     public void start()
         throws MuleException
     {
+        super.init();
     }
 
     @Override

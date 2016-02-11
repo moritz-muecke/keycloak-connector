@@ -12,6 +12,7 @@
         <integer defaultValue="8080" min="0" step="1" name="keycloakPort" caption="Keycloak Port" description="Keycloak Server Port." supportsExpressions="false" required="false" javaType="int"></integer>
         <string name="adminPassword" caption="Admin Password" description="Keycloak administration User password." supportsExpressions="false" required="true" javaType="java.lang.String"></string>
         <string name="adminUser" caption="Admin User" description="Keycloak administration User." supportsExpressions="false" required="true" javaType="java.lang.String"></string>
+        <string name="realm" caption="Realm" description="Keycloak Realm to administrate." supportsExpressions="false" required="true" javaType="java.lang.String"></string>
       </group>
     </attribute-category>
   </global-cloud-connector>
@@ -27,12 +28,16 @@
       <group id="keycloakConnectorGeneric" caption="Basic Settings">
         <modeSwitch alwaysCombo="true" name="Keycloak operations to execute" caption="Operation" description="Operation.">
           <no-operation abstractElement="http://www.mulesoft.org/schema/mule/keycloak/abstractKeycloakConnectorGeneric" versions="[3.5.0,8.0.0]" connector-name="processor"></no-operation>
-          <mode modeId="http://www.mulesoft.org/schema/mule/keycloak/create-user-from-payload" modeLabel="Create user from payload"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/keycloak/get-user-by-id" modeLabel="Get user by id"></mode>
         </modeSwitch>
       </group>
     </attribute-category>
   </cloud-connector>
-  <cloud-connector returnType="void" caption="Create User From Payload" icon="icons/small/keycloak-connector-24x16.png" localId="create-user-from-payload" image="icons/large/keycloak-connector-48x32.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/keycloak/abstractKeycloakConnectorGeneric" metaData="static">
-    <attribute-category caption="General" description="General."></attribute-category>
+  <cloud-connector returnType="void" caption="Get User By Id" icon="icons/small/keycloak-connector-24x16.png" localId="get-user-by-id" image="icons/large/keycloak-connector-48x32.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/keycloak/abstractKeycloakConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="id" caption="Id" description="The id of the user which should be returned." required="true" javaType="java.lang.String"></string>
+      </group>
+    </attribute-category>
   </cloud-connector>
 </namespace>

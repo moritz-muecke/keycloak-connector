@@ -1,7 +1,7 @@
 package org.mule.modules.keycloak.automation.unit
 
 import org.mule.modules.keycloak.client.service.UserService
-import org.mule.modules.keycloak.client.service.v18.UserServiceV18
+import org.mule.modules.keycloak.client.service.UserServiceV18
 import org.mule.modules.keycloak.config.KeycloakAdminConfig
 import spock.lang.Specification
 

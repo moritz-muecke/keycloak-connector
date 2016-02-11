@@ -67,6 +67,21 @@
           "isArrayOrListOrMap": false,
           "javaName": "adminPassword",
           "description": "Keycloak administration User password"
+        },
+        {
+          "javaTypeName": "String",
+          "fullQualifiedJavaTypeName": "java.lang.String",
+          "isOptional": false,
+          "isRefOnly": false,
+          "isPayload": false,
+          "isComplexType": false,
+          "isEnum": false,
+          "isString": true,
+          "typeMirror": "java.lang.String",
+          "isHttpCallback": false,
+          "isArrayOrListOrMap": false,
+          "javaName": "realm",
+          "description": "Keycloak Realm to administrate"
         }
       ],
       "javaName": "ConnectorConfig",
@@ -92,12 +107,28 @@
         "isHttpCallback": false,
         "description": ""
       },
-      "parameters": [],
+      "parameters": [
+        {
+          "javaTypeName": "String",
+          "fullQualifiedJavaTypeName": "java.lang.String",
+          "isOptional": false,
+          "isRefOnly": false,
+          "isPayload": false,
+          "isComplexType": false,
+          "isEnum": false,
+          "isString": true,
+          "typeMirror": "java.lang.String",
+          "isHttpCallback": false,
+          "isArrayOrListOrMap": false,
+          "javaName": "id",
+          "description": "The id of the user which should be returned"
+        }
+      ],
       "apiDocUrl": "",
-      "javaName": "createUserFromPayload",
-      "friendlyName": "Create user from payload",
+      "javaName": "getUserById",
+      "friendlyName": "Get user by id",
       "description": "Creates a user from json",
-      "xsdName": "create-user-from-payload"
+      "xsdName": "get-user-by-id"
     }
   ],
   "filters": [],

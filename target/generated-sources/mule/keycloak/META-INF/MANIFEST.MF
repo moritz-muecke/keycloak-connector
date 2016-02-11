@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Keycloak
 Bundle-SymbolicName: org.mule.tooling.ui.contribution.keycloak.3.5.0;singleton:=true
-Bundle-Version: 1.0.0.201602101500
+Bundle-Version: 1.0.0.201602111542
 Bundle-Activator: org.mule.tooling.ui.contribution.KeycloakActivator
 Bundle-Vendor: 
 Require-Bundle: org.eclipse.ui,

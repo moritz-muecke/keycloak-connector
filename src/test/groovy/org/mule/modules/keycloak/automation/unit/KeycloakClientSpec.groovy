@@ -1,7 +1,7 @@
 package org.mule.modules.keycloak.automation.unit
 
 import org.keycloak.representations.idm.UserRepresentation
-import org.mule.modules.keycloak.Exception.UserNotFoundException
+import org.mule.modules.keycloak.exception.UserNotFoundException
 import org.mule.modules.keycloak.client.KeycloakClient
 import org.mule.modules.keycloak.client.service.UserService
 import org.mule.modules.keycloak.config.ConnectorConfig
