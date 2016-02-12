@@ -25,7 +25,7 @@ class KeycloakClientSpec extends Specification {
         def payload = '{"username":"test" , "email":"test@test.de"}'
 
         when:
-        client.createUserFromPayload(payload)
+        client.createUser(payload)
 
         then:
         1 * userService.createUser(payload)

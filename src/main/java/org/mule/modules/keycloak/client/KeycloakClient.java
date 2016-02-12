@@ -20,7 +20,7 @@ public class KeycloakClient {
         this.userService = new UserServiceV18(keycloakConfig);
     }
 
-    public void createUserFromPayload(String payload) {
+    public void createUser(String payload) {
         userService.createUser(payload);
     }
 
