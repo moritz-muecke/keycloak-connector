@@ -1,6 +1,7 @@
 package org.mule.modules.keycloak.client;
 
 import org.keycloak.representations.idm.UserRepresentation;
+import org.mule.modules.keycloak.exception.UserAlreadyExistsException;
 import org.mule.modules.keycloak.exception.UserNotFoundException;
 import org.mule.modules.keycloak.client.service.UserService;
 import org.mule.modules.keycloak.client.service.UserServiceV18;
@@ -20,12 +21,20 @@ public class KeycloakClient {
         this.userService = new UserServiceV18(keycloakConfig);
     }
 
-    public void createUser(String payload) {
-        userService.createUser(payload);
+    public String createUser(String payload) throws IOException, UserAlreadyExistsException {
+        return userService.createUser(payload);
     }
 
     public UserRepresentation getUserById(String id) throws UserNotFoundException, IOException {
         return userService.getUser(id);
+    }
+
+    public void deleteUserById(String id) throws UserNotFoundException {
+        userService.deleteUser(id);
+    }
+
+    public void editUserById(String id, String jsonString) throws UserNotFoundException, IOException {
+        userService.editUser(id, jsonString);
     }
 
     public UserService getUserService() {

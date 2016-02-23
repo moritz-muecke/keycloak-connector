@@ -1,5 +1,8 @@
 package org.mule.modules.keycloak.config;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectReader;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.keycloak.representations.AccessTokenResponse;
 
 import javax.ws.rs.core.UriBuilder;
@@ -17,6 +20,7 @@ public class KeycloakAdminConfig {
     private URI keycloakAdminTokenUri;
     private URI keycloakAdminLogoutUri;
 
+    public static final ObjectMapper mapper = new ObjectMapper();
 
     public KeycloakAdminConfig(ConnectorConfig config) {
         this.adminUser = config.getAdminUser();
