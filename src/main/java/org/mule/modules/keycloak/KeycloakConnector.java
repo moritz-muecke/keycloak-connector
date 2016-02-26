@@ -1,5 +1,6 @@
 package org.mule.modules.keycloak;
 
+import org.glassfish.jersey.client.ClientConfig;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.mule.api.annotations.Config;
 import org.mule.api.annotations.Connector;
@@ -9,11 +10,16 @@ import org.mule.api.annotations.lifecycle.Start;
 import org.mule.api.annotations.param.OutboundHeaders;
 import org.mule.module.http.api.HttpConstants;
 import org.mule.modules.keycloak.client.KeycloakClient;
+import org.mule.modules.keycloak.client.filter.AdminSessionFilter;
+import org.mule.modules.keycloak.client.filter.EndAdminSessionFilter;
+import org.mule.modules.keycloak.client.service.UserService;
 import org.mule.modules.keycloak.config.ConnectorConfig;
 import org.mule.modules.keycloak.config.KeycloakAdminConfig;
 import org.mule.modules.keycloak.exception.UserAlreadyExistsException;
 import org.mule.modules.keycloak.exception.UserNotFoundException;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,11 +32,17 @@ public class KeycloakConnector {
     @Config
     ConnectorConfig config;
 
-    private KeycloakClient client;
+    private KeycloakClient keycloakClient;
 
     @Start
     public void init(){
-        client = new KeycloakClient(config);
+        KeycloakAdminConfig keycloakConfig = new KeycloakAdminConfig(config);
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.register(new AdminSessionFilter(keycloakConfig));
+        clientConfig.register(new EndAdminSessionFilter(keycloakConfig));
+        Client client = ClientBuilder.newClient(clientConfig);
+        UserService userService = new UserService(keycloakConfig, client);
+        keycloakClient = new KeycloakClient(userService);
     }
 
     /**
@@ -41,7 +53,7 @@ public class KeycloakConnector {
     public Object getUserById(@OutboundHeaders Map<String, Object> headers, String id) {
         UserRepresentation user = null;
         try {
-            user = client.getUserById(id);
+            user = keycloakClient.readUserById(id);
             headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
             return KeycloakAdminConfig.mapper.writeValueAsString(user);
         } catch (UserNotFoundException e) {
@@ -61,7 +73,7 @@ public class KeycloakConnector {
     @Processor
     public void createUser(@OutboundHeaders Map<String, Object> headers, String jsonString) {
         try {
-            String location = client.createUser(jsonString);
+            String location = keycloakClient.createUser(jsonString);
             headers.put(HttpHeaders.LOCATION, location);
             setHttpResponseStatus(headers, Response.Status.CREATED);
         } catch (UserAlreadyExistsException e) {
@@ -80,7 +92,7 @@ public class KeycloakConnector {
     @Processor
     public Object deleteUserById(@OutboundHeaders Map<String, Object> headers, String id) {
         try {
-            client.deleteUserById(id);
+            keycloakClient.deleteUserById(id);
             setHttpResponseStatus(headers, Response.Status.NO_CONTENT);
             return "";
         } catch (UserNotFoundException e) {
@@ -90,16 +102,16 @@ public class KeycloakConnector {
     }
 
     /**
-     * Edits user on Keycloak by user ID
+     * Updates user on Keycloak by user ID
      * @param headers Injected by mule
-     * @param id The id of the user which should be edited
+     * @param id The id of the user which should be updated
      * @param jsonString The JSON representation of the user
      * @return
      */
     @Processor
-    public Object editUserById(@OutboundHeaders Map<String, Object> headers, String id, String jsonString) {
+    public Object updateUserById(@OutboundHeaders Map<String, Object> headers, String id, String jsonString) {
         try {
-            client.editUserById(id, jsonString);
+            keycloakClient.updateUserById(id, jsonString);
             setHttpResponseStatus(headers, Response.Status.NO_CONTENT);
             return "";
         } catch (UserNotFoundException e) {

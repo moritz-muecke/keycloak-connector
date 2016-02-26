@@ -13,14 +13,14 @@ import java.io.IOException;
 /**
  * Created by moritz.moeller on 11.02.2016.
  */
-public class AuthHeaderFilter implements ClientRequestFilter {
+public class AdminSessionFilter implements ClientRequestFilter {
 
 
     private KeycloakAdminConfig config;
     private ObjectMapper mapper;
     private Client client;
 
-    public AuthHeaderFilter(KeycloakAdminConfig config) {
+    public AdminSessionFilter(KeycloakAdminConfig config) {
         this.config = config;
         this.client = ClientBuilder.newClient();
         this.mapper = new ObjectMapper();
