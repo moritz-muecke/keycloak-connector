@@ -51,7 +51,7 @@ public class KeycloakConnector {
      */
     @Processor
     public Object getUserById(@OutboundHeaders Map<String, Object> headers, String id) {
-        UserRepresentation user = null;
+        UserRepresentation user;
         try {
             user = keycloakClient.readUserById(id);
             headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
