@@ -39,7 +39,9 @@ class UserServiceSpec extends Specification{
     def "read user from keycloak"() {
         setup:
         def userId = "abc123"
-        builder.get(String.class) >> validUserJson
+        builder.get() >> response
+        response.getStatus() >> Response.Status.OK.getStatusCode()
+        response.readEntity(_) >> validUserJson
 
         expect:
         userService.readUser(userId).getUsername() == "test"
@@ -47,17 +49,17 @@ class UserServiceSpec extends Specification{
     }
 
 
-    def "read user from keycloak throws IOException"() {
-        given:
+    def "read user from keycloak throws UserNotFoundException"() {
+        setup:
         def userId = "abc123"
-
+        response.getStatus() >> Response.Status.NOT_FOUND.getStatusCode()
         when:
         userService.readUser(userId)
 
         then:
-        1 * builder.get(String.class) >> invalidUserJson
-        IOException exception = thrown()
-        exception.message.contains("Unrecognized field")
+        1 * builder.get() >> response
+        UserNotFoundException exception = thrown()
+        exception.message.contains("User not found")
     }
 
 

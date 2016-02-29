@@ -58,9 +58,11 @@ public class UserService {
         }
     }
 
-    public UserRepresentation readUser(String userId) throws IOException {
+    public UserRepresentation readUser(String userId) throws IOException, UserNotFoundException {
         target = client.target(keycloakConfig.getKeycloakUserUri()).path(userId);
-        String jsonUser = target.request(MediaType.APPLICATION_JSON).get(String.class);
-        return KeycloakAdminConfig.mapper.readValue(jsonUser, UserRepresentation.class);
+        response = target.request().get();
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            return KeycloakAdminConfig.mapper.readValue(response.readEntity(String.class), UserRepresentation.class);
+        } else throw new UserNotFoundException("User not found");
     }
 }

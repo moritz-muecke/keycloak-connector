@@ -15,8 +15,7 @@ import org.mule.modules.keycloak.client.filter.EndAdminSessionFilter;
 import org.mule.modules.keycloak.client.service.UserService;
 import org.mule.modules.keycloak.config.ConnectorConfig;
 import org.mule.modules.keycloak.config.KeycloakAdminConfig;
-import org.mule.modules.keycloak.exception.UserAlreadyExistsException;
-import org.mule.modules.keycloak.exception.UserNotFoundException;
+import org.mule.modules.keycloak.exception.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -48,78 +47,54 @@ public class KeycloakConnector {
     /**
      * Retrieves user from Keycloak by user ID
      * @param id The id of the user which should be returned
+     * @return The JSON representation of an user
      */
     @Processor
-    public Object getUserById(@OutboundHeaders Map<String, Object> headers, String id) {
-        UserRepresentation user;
+    public Object getUserById(String id) throws ReadUserException {
         try {
-            user = keycloakClient.readUserById(id);
-            headers.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-            return KeycloakAdminConfig.mapper.writeValueAsString(user);
-        } catch (UserNotFoundException e) {
-            setHttpResponseStatus(headers, Response.Status.NOT_FOUND);
-            return e.getMessage();
-        } catch (IOException e) {
-            setHttpResponseStatus(headers, Response.Status.BAD_REQUEST);
-            return e.getMessage();
+            return KeycloakAdminConfig.mapper.writeValueAsString(keycloakClient.readUserById(id));
+        } catch (Exception e) {
+            throw new ReadUserException(String.format("Retrieving User %s from Keycloak failed. Reason: %s", id, e.getMessage()));
         }
     }
 
     /**
      * Creates a new user on Keycloak
-     * @param headers Injected by mule
      * @param jsonString The JSON representation of the user
      */
     @Processor
-    public void createUser(@OutboundHeaders Map<String, Object> headers, String jsonString) {
+    public void createUser(String jsonString) throws CreateUserException {
         try {
             String location = keycloakClient.createUser(jsonString);
-            headers.put(HttpHeaders.LOCATION, location);
-            setHttpResponseStatus(headers, Response.Status.CREATED);
-        } catch (UserAlreadyExistsException e) {
-            setHttpResponseStatus(headers, Response.Status.CONFLICT);
-        } catch (IOException e) {
-            setHttpResponseStatus(headers, Response.Status.BAD_REQUEST);
+        } catch (Exception e) {
+            throw new CreateUserException(String.format("Creation of user failed. Reason: %s", e.getMessage()));
         }
     }
 
     /**
      * Deletes user on Keycloak by user ID
-     * @param headers Injected by mule
      * @param id The id of the user which should be deleted
-     * @return
      */
     @Processor
-    public Object deleteUserById(@OutboundHeaders Map<String, Object> headers, String id) {
+    public void deleteUserById(String id) throws DeleteUserException {
         try {
             keycloakClient.deleteUserById(id);
-            setHttpResponseStatus(headers, Response.Status.NO_CONTENT);
-            return "";
-        } catch (UserNotFoundException e) {
-            setHttpResponseStatus(headers, Response.Status.NOT_FOUND);
-            return e.getMessage();
+        } catch (Exception e) {
+            throw new DeleteUserException(String.format("Deletion of user %s failed. Reason: %s", id, e.getMessage()));
         }
     }
 
     /**
      * Updates user on Keycloak by user ID
-     * @param headers Injected by mule
      * @param id The id of the user which should be updated
      * @param jsonString The JSON representation of the user
-     * @return
      */
     @Processor
-    public Object updateUserById(@OutboundHeaders Map<String, Object> headers, String id, String jsonString) {
+    public void updateUserById(String id, String jsonString) throws UpdateUserException {
         try {
             keycloakClient.updateUserById(id, jsonString);
-            setHttpResponseStatus(headers, Response.Status.NO_CONTENT);
-            return "";
-        } catch (UserNotFoundException e) {
-            setHttpResponseStatus(headers, Response.Status.NOT_FOUND);
-            return e.getMessage();
-        } catch (IOException e) {
-            setHttpResponseStatus(headers, Response.Status.BAD_REQUEST);
-            return e.getMessage();
+        } catch (Exception e) {
+            throw new UpdateUserException(String.format("Update of user %s failed. Reason: %s", id, e.getMessage()));
         }
     }
 
