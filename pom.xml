@@ -17,6 +17,7 @@
     <properties>
         <category>Community</category>
         <licensePath>LICENSE.md</licensePath>
+		<jdk.version>1.8</jdk.version>
         <devkit.studio.package.skip>false</devkit.studio.package.skip>
     </properties>
     
