@@ -1,14 +1,11 @@
 package org.mule.modules.keycloak;
 
 import org.glassfish.jersey.client.ClientConfig;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.mule.api.annotations.Config;
 import org.mule.api.annotations.Connector;
 import org.mule.api.annotations.Processor;
 
 import org.mule.api.annotations.lifecycle.Start;
-import org.mule.api.annotations.param.OutboundHeaders;
-import org.mule.module.http.api.HttpConstants;
 import org.mule.modules.keycloak.client.KeycloakClient;
 import org.mule.modules.keycloak.client.filter.AdminSessionFilter;
 import org.mule.modules.keycloak.client.filter.EndAdminSessionFilter;
@@ -19,11 +16,6 @@ import org.mule.modules.keycloak.exception.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.Map;
 
 @Connector(name="keycloak", friendlyName="Keycloak")
 public class KeycloakConnector {
@@ -65,7 +57,8 @@ public class KeycloakConnector {
     @Processor
     public void createUser(String jsonString) throws CreateUserException {
         try {
-            String location = keycloakClient.createUser(jsonString);
+            //String location = keycloakClient.createUser(jsonString);
+        	keycloakClient.createUser(jsonString);
         } catch (Exception e) {
             throw new CreateUserException(String.format("Creation of user failed. Reason: %s", e.getMessage()));
         }
@@ -105,10 +98,4 @@ public class KeycloakConnector {
     public void setConfig(ConnectorConfig config) {
         this.config = config;
     }
-
-    private void setHttpResponseStatus(Map<String, Object> headers, Response.StatusType statusType) {
-        headers.put(HttpConstants.ResponseProperties.HTTP_STATUS_PROPERTY, statusType.getStatusCode());
-        headers.put(HttpConstants.ResponseProperties.HTTP_REASON_PROPERTY, statusType.getReasonPhrase());
-    }
-
 }

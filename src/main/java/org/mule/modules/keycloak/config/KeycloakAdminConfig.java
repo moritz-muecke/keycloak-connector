@@ -1,8 +1,6 @@
 package org.mule.modules.keycloak.config;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectReader;
-import org.codehaus.jackson.map.ObjectWriter;
 import org.keycloak.representations.AccessTokenResponse;
 
 import javax.ws.rs.core.UriBuilder;
