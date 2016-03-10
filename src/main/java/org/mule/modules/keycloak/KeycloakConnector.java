@@ -1,6 +1,9 @@
 package org.mule.modules.keycloak;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.client.ClientConfig;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.mule.api.annotations.Config;
 import org.mule.api.annotations.Connector;
 import org.mule.api.annotations.Processor;
@@ -24,6 +27,8 @@ public class KeycloakConnector {
     ConnectorConfig config;
 
     private KeycloakClient keycloakClient;
+
+    static final private Log logger = LogFactory.getLog(KeycloakConnector.class);
 
     @Start
     public void init(){
@@ -57,8 +62,8 @@ public class KeycloakConnector {
     @Processor
     public void createUser(String jsonString) throws CreateUserException {
         try {
-            //String location = keycloakClient.createUser(jsonString);
-        	keycloakClient.createUser(jsonString);
+            String location = keycloakClient.createUser(jsonString);
+            logger.info("User created. Location: " + location);
         } catch (Exception e) {
             throw new CreateUserException(String.format("Creation of user failed. Reason: %s", e.getMessage()));
         }
@@ -72,6 +77,7 @@ public class KeycloakConnector {
     public void deleteUserById(String id) throws DeleteUserException {
         try {
             keycloakClient.deleteUserById(id);
+            logger.info(String.format("Deleted User with ID %s", id));
         } catch (Exception e) {
             throw new DeleteUserException(String.format("Deletion of user %s failed. Reason: %s", id, e.getMessage()));
         }
@@ -86,6 +92,7 @@ public class KeycloakConnector {
     public void updateUserById(String id, String jsonString) throws UpdateUserException {
         try {
             keycloakClient.updateUserById(id, jsonString);
+            logger.info(String.format("Updated User with ID %s", id));
         } catch (Exception e) {
             throw new UpdateUserException(String.format("Update of user %s failed. Reason: %s", id, e.getMessage()));
         }

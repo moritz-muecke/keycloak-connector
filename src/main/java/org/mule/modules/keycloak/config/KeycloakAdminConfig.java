@@ -17,6 +17,7 @@ public class KeycloakAdminConfig {
     private URI keycloakUserUri;
     private URI keycloakAdminTokenUri;
     private URI keycloakAdminLogoutUri;
+    private URI keycloakResetPasswordUri;
 
     public static final ObjectMapper mapper = new ObjectMapper();
 

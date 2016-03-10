@@ -32,6 +32,19 @@ class KeycloakClientSpec extends Specification {
         client.createUser(payload) == location
     }
 
+    def "call user-service to create a user with password resetand retrieve the location path"() {
+        given:
+        def location = "/users/abc123"
+        def payload = '{"username":"test","email":"test@test.de","credentials":[{"type":"password","value":"password","temporary": false}]}'
+
+        when:
+        client.createUser(payload)
+
+        then:
+        1 * userService.createUser(payload) >> location
+        1 * userService.resetUserPassword(_, "abc123")
+    }
+
     def "call user-service to create a user and and throw UserAlreadyExistsException"(){
         given:
         def payload = '{"username":"test" , "email":"test@test.de"}'

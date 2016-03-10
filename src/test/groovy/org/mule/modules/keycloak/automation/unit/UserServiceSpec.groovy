@@ -1,10 +1,12 @@
 package org.mule.modules.keycloak.automation.unit
 
 import org.codehaus.jackson.map.exc.UnrecognizedPropertyException
+import org.keycloak.representations.idm.CredentialRepresentation
 import org.keycloak.representations.idm.ErrorRepresentation
 import org.keycloak.representations.idm.UserRepresentation
 import org.mule.modules.keycloak.client.service.UserService
 import org.mule.modules.keycloak.config.KeycloakAdminConfig
+import org.mule.modules.keycloak.exception.CreateUserException
 import org.mule.modules.keycloak.exception.UserAlreadyExistsException
 import org.mule.modules.keycloak.exception.UserNotFoundException
 import spock.lang.Specification
@@ -83,7 +85,7 @@ class UserServiceSpec extends Specification{
 
         then:
         1 * builder.post(_) >> response
-        1 * response.getStatus() >> Response.Status.CONFLICT.getStatusCode()
+        2 * response.getStatus() >> Response.Status.CONFLICT.getStatusCode()
         1 * response.readEntity(String.class) >> errorJson
         UserAlreadyExistsException exception = thrown()
         exception.message == "User already exists"
@@ -152,6 +154,42 @@ class UserServiceSpec extends Specification{
         1 * response.getStatus() >> Response.Status.NOT_FOUND.getStatusCode()
         UserNotFoundException exception = thrown()
         exception.message == "User not found"
+    }
+
+    def "reset two password types of user"() {
+        given:
+        def credentials = new ArrayList<CredentialRepresentation>()
+        def credRepA = Mock(CredentialRepresentation)
+        def credRepB = Mock(CredentialRepresentation)
+        credentials.add(credRepA)
+        credentials.add(credRepB)
+        def userId = "abc123"
+
+        when:
+        userService.resetUserPassword(credentials, userId)
+
+        then:
+        2 * builder.put(_) >> response
+        2 * response.status >> Response.Status.NO_CONTENT.statusCode
+    }
+
+    def "reset password of user throws CreateUserException"() {
+        given:
+        def credentials = new ArrayList<CredentialRepresentation>()
+        def credRep = Mock(CredentialRepresentation)
+        credentials.add(credRep)
+        def userId = "abc123"
+
+        when:
+        userService.resetUserPassword(credentials, userId)
+
+        then:
+        1 * builder.put(_) >> response
+        1 * response.status >> Response.Status.BAD_REQUEST.statusCode
+        1 * builder.delete() >> response
+        1 * response.status >> Response.Status.NO_CONTENT.statusCode
+        CreateUserException e = thrown()
+        e.message == "Password reset to activate user failed"
     }
 
 }
