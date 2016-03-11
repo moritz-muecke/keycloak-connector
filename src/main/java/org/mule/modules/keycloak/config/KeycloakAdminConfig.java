@@ -17,7 +17,6 @@ public class KeycloakAdminConfig {
     private URI keycloakUserUri;
     private URI keycloakAdminTokenUri;
     private URI keycloakAdminLogoutUri;
-    private URI keycloakResetPasswordUri;
 
     public static final ObjectMapper mapper = new ObjectMapper();
 
@@ -25,9 +24,9 @@ public class KeycloakAdminConfig {
         this.adminUser = config.getAdminUser();
         this.adminPassword = config.getAdminPassword();
         this.keycloakBaseUri = buildUri(config.getKeycloakUrl(), config.getKeycloakPort(), "/auth");
-        this.keycloakUserUri = enhanceUri(this.keycloakBaseUri, String.format("/admin/realms/%s/users", config.getRealm()));
-        this.keycloakAdminTokenUri = enhanceUri(this.keycloakBaseUri, "/realms/master/protocol/openid-connect/token");
-        this.keycloakAdminLogoutUri = enhanceUri(this.keycloakBaseUri, "/realms/master/protocol/openid-connect/logout");
+        this.keycloakUserUri = extendUri(this.keycloakBaseUri, String.format("/admin/realms/%s/users", config.getRealm()));
+        this.keycloakAdminTokenUri = extendUri(this.keycloakBaseUri, "/realms/master/protocol/openid-connect/token");
+        this.keycloakAdminLogoutUri = extendUri(this.keycloakBaseUri, "/realms/master/protocol/openid-connect/logout");
     }
 
     public URI buildUri(String url, int port, String path) {
@@ -38,7 +37,7 @@ public class KeycloakAdminConfig {
         return builder.build();
     }
 
-    public URI enhanceUri(URI baseUri, String path) {
+    public URI extendUri(URI baseUri, String path) {
         UriBuilder builder = UriBuilder
                 .fromUri(baseUri)
                 .path(path);
