@@ -2,11 +2,14 @@ package org.mule.modules.keycloak.client;
 
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.mule.modules.keycloak.KeycloakConnector;
 import org.mule.modules.keycloak.config.KeycloakAdminConfig;
 import org.mule.modules.keycloak.exception.CreateUserException;
 import org.mule.modules.keycloak.exception.UserAlreadyExistsException;
 import org.mule.modules.keycloak.exception.UserNotFoundException;
 import org.mule.modules.keycloak.client.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +18,9 @@ import java.util.List;
  * Created by moritz.moeller on 10.02.2016.
  */
 public class KeycloakClient {
+
+    private final Logger logger = LoggerFactory.getLogger(KeycloakClient.class);
+
     private UserService userService;
 
     public KeycloakClient(UserService userService) {
@@ -27,6 +33,7 @@ public class KeycloakClient {
 
         if (user.getCredentials() != null && !user.getCredentials().isEmpty()) {
             String userId = location.substring(location.lastIndexOf('/') + 1);
+            logger.debug("Credentials were submitted, activating user {} now", userId);
             userService.resetUserPassword(user.getCredentials(), userId);
         }
 
