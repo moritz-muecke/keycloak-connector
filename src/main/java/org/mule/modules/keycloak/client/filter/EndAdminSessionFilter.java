@@ -23,7 +23,8 @@ public class EndAdminSessionFilter implements ClientResponseFilter {
 
     @Override
     public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext) throws IOException {
-        if (!(responseContext.getStatus() < Response.Status.OK.getStatusCode() && responseContext.getStatus() > Response.Status.NO_CONTENT.getStatusCode())) {
+        if ((responseContext.getStatus() > Response.Status.OK.getStatusCode() &&
+                responseContext.getStatus() < Response.Status.NO_CONTENT.getStatusCode())) {
             endAdminSession();
         }
     }

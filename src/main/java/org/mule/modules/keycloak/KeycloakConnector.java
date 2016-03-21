@@ -35,12 +35,14 @@ public class KeycloakConnector {
 
     @Start
     public void init(){
+        logger.debug("Initializing Keycloak-Admin-Connector");
         KeycloakAdminConfig keycloakConfig = new KeycloakAdminConfig(config);
         ClientConfig clientConfig = new ClientConfig();
         Client client = ClientBuilder.newClient(clientConfig);
         UserService userService = new UserService(keycloakConfig, client);
         userService.registerAdminSessionFilter();
         userService.registerEndAdminSessionFilter();
+        logger.debug("Instantiating Client");
         keycloakClient = new KeycloakClient(userService);
     }
 
@@ -56,7 +58,9 @@ public class KeycloakConnector {
             return KeycloakAdminConfig.mapper.writeValueAsString(keycloakClient.readUserById(id));
         } catch (Exception e) {
             logger.debug("Read User {} failed. Reason: {}", id, e.getMessage());
-            throw new ReadUserException(String.format("Retrieving User %s from Keycloak failed. Reason: %s", id, e.getMessage()));
+            throw new ReadUserException(
+                    String.format("Retrieving User %s from Keycloak failed. Reason: %s", id, e.getMessage())
+            );
         }
     }
 

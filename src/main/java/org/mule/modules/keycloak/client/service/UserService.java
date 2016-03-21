@@ -48,7 +48,8 @@ public class UserService {
         if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
             return response.getHeaderString(HttpHeaders.LOCATION);
         } else if (response.getStatus() == Response.Status.CONFLICT.getStatusCode()){
-            ErrorRepresentation error = KeycloakAdminConfig.mapper.readValue(response.readEntity(String.class), ErrorRepresentation.class);
+            ErrorRepresentation error = KeycloakAdminConfig.mapper
+                    .readValue(response.readEntity(String.class), ErrorRepresentation.class);
             throw new UserAlreadyExistsException(error.getErrorMessage());
         } else {
             throw new CreateUserException("User creation failed with status: " + response.getStatus());
@@ -86,13 +87,17 @@ public class UserService {
         } else throw new UserNotFoundException("User not found");
     }
 
-    public void resetUserPassword(List<CredentialRepresentation> credentials, String userId) throws UserNotFoundException, CreateUserException {
+    public void resetUserPassword(List<CredentialRepresentation> credentials, String userId) throws
+            UserNotFoundException, CreateUserException {
         for (CredentialRepresentation cred: credentials){
             try {
                 target = client.target(keycloakConfig.getKeycloakUserUri()).path(userId).path("/reset-password");
                 logger.debug("Sending reset password request to activate user {} to keycloak now", userId);
-                response = target.request().put(Entity.entity(KeycloakAdminConfig.mapper.writeValueAsString(cred), MediaType.APPLICATION_JSON_TYPE));
-                logger.debug("Received status {} from reset password request for user {}", response.getStatus(), userId);
+                response = target.request().put(Entity.entity(
+                        KeycloakAdminConfig.mapper.writeValueAsString(cred), MediaType.APPLICATION_JSON_TYPE)
+                );
+                logger.debug("Received status {} from reset password request for user {}",
+                        response.getStatus(), userId);
                 if (response.getStatus() != Response.Status.NO_CONTENT.getStatusCode()) throw new Exception();
             } catch (Exception e) {
                 deleteUser(userId);

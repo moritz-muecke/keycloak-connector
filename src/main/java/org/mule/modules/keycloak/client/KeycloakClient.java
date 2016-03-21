@@ -27,7 +27,8 @@ public class KeycloakClient {
         this.userService = userService;
     }
 
-    public String createUser(String jsonString) throws IOException, UserAlreadyExistsException, CreateUserException, UserNotFoundException {
+    public String createUser(String jsonString) throws
+            IOException, UserAlreadyExistsException, CreateUserException, UserNotFoundException {
         UserRepresentation user = KeycloakAdminConfig.mapper.readValue(jsonString, UserRepresentation.class);
         String location = userService.createUser(jsonString);
 

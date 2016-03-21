@@ -20,28 +20,31 @@ public class KeycloakAdminConfig {
 
     public static final ObjectMapper mapper = new ObjectMapper();
 
+    private static final String ADMIN_TOKEN_ENDPOINT = "/realms/master/protocol/openid-connect/token";
+    private static final String ADMIN_LOGOUT_ENDPOINT = "/realms/master/protocol/openid-connect/logout";
+    private static final String USER_ENDPOINT = "/admin/realms/%s/users";
+    private static final String BASIC_ENDPOINT = "/auth";
+
     public KeycloakAdminConfig(ConnectorConfig config) {
         this.adminUser = config.getAdminUser();
         this.adminPassword = config.getAdminPassword();
-        this.keycloakBaseUri = buildUri(config.getKeycloakUrl(), config.getKeycloakPort(), "/auth");
-        this.keycloakUserUri = extendUri(this.keycloakBaseUri, String.format("/admin/realms/%s/users", config.getRealm()));
-        this.keycloakAdminTokenUri = extendUri(this.keycloakBaseUri, "/realms/master/protocol/openid-connect/token");
-        this.keycloakAdminLogoutUri = extendUri(this.keycloakBaseUri, "/realms/master/protocol/openid-connect/logout");
-    }
-
-    public URI buildUri(String url, int port, String path) {
-        UriBuilder builder = UriBuilder
-                .fromUri(url)
-                .port(port)
-                .path(path);
-        return builder.build();
-    }
-
-    public URI extendUri(URI baseUri, String path) {
-        UriBuilder builder = UriBuilder
-                .fromUri(baseUri)
-                .path(path);
-        return builder.build();
+        this.keycloakBaseUri = UriBuilder
+                .fromUri(config.getKeycloakUrl())
+                .port(config.getKeycloakPort())
+                .path(BASIC_ENDPOINT)
+                .build();
+        this.keycloakUserUri = UriBuilder
+                .fromUri(this.keycloakBaseUri)
+                .path(String.format(USER_ENDPOINT, config.getRealm()))
+                .build();
+        this.keycloakAdminTokenUri = UriBuilder.
+                fromUri(this.keycloakBaseUri)
+                .path(ADMIN_TOKEN_ENDPOINT)
+                .build();
+        this.keycloakAdminLogoutUri = UriBuilder
+                .fromUri(this.keycloakBaseUri)
+                .path(ADMIN_LOGOUT_ENDPOINT)
+                .build();
     }
 
     public String getAdminUser() {
