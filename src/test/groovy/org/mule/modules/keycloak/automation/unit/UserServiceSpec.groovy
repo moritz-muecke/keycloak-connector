@@ -85,7 +85,7 @@ class UserServiceSpec extends Specification{
 
         then:
         1 * builder.post(_) >> response
-        2 * response.getStatus() >> Response.Status.CONFLICT.getStatusCode()
+        3 * response.getStatus() >> Response.Status.CONFLICT.getStatusCode()
         1 * response.readEntity(String.class) >> errorJson
         UserAlreadyExistsException exception = thrown()
         exception.message == "User already exists"
@@ -107,7 +107,7 @@ class UserServiceSpec extends Specification{
 
         then:
         1 * builder.put(_) >> response
-        1 * response.getStatus() >> Response.Status.NO_CONTENT.getStatusCode()
+        2 * response.getStatus() >> Response.Status.NO_CONTENT.getStatusCode()
     }
 
     def "update user on keycloak throws UserNotFoundException"() {
@@ -116,7 +116,7 @@ class UserServiceSpec extends Specification{
 
         then:
         1 * builder.put(_) >> response
-        1 * response.getStatus() >> Response.Status.NOT_FOUND.getStatusCode()
+        2 * response.getStatus() >> Response.Status.NOT_FOUND.getStatusCode()
         UserNotFoundException exception = thrown()
         exception.message == "User not found"
     }
@@ -139,7 +139,7 @@ class UserServiceSpec extends Specification{
 
         then:
         1 * builder.delete() >> response
-        1 * response.getStatus() >> Response.Status.NO_CONTENT.getStatusCode()
+        2 * response.getStatus() >> Response.Status.NO_CONTENT.getStatusCode()
     }
 
     def "delete user from keycloak throws UserNotFoundException"() {
@@ -151,7 +151,7 @@ class UserServiceSpec extends Specification{
 
         then:
         1 * builder.delete() >> response
-        1 * response.getStatus() >> Response.Status.NOT_FOUND.getStatusCode()
+        2 * response.getStatus() >> Response.Status.NOT_FOUND.getStatusCode()
         UserNotFoundException exception = thrown()
         exception.message == "User not found"
     }
@@ -170,7 +170,7 @@ class UserServiceSpec extends Specification{
 
         then:
         2 * builder.put(_) >> response
-        2 * response.status >> Response.Status.NO_CONTENT.statusCode
+        4 * response.status >> Response.Status.NO_CONTENT.statusCode
     }
 
     def "reset password of user throws CreateUserException"() {
@@ -185,7 +185,7 @@ class UserServiceSpec extends Specification{
 
         then:
         1 * builder.put(_) >> response
-        1 * response.status >> Response.Status.BAD_REQUEST.statusCode
+        3 * response.status >> Response.Status.BAD_REQUEST.statusCode
         1 * builder.delete() >> response
         1 * response.status >> Response.Status.NO_CONTENT.statusCode
         CreateUserException e = thrown()
