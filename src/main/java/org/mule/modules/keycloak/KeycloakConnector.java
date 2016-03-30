@@ -1,5 +1,13 @@
 package org.mule.modules.keycloak;
 
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.mule.api.annotations.display.Password;
+import org.mule.api.annotations.display.Placement;
+import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.Email;
+import org.mule.api.annotations.param.Optional;
+import org.mule.api.annotations.param.OutboundHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +28,7 @@ import org.mule.modules.keycloak.exception.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -67,13 +76,15 @@ public class KeycloakConnector {
     /**
      * Creates a new user on Keycloak from JSON string
      * @param jsonString The JSON representation of the user
+     * @param outboundHeaders Outbound properties of the current mule message
      */
     @Processor
-    public void createUserFromJson(String jsonString) throws CreateUserException {
+    public void createUserFromJson(String jsonString, @OutboundHeaders Map<String, Object> outboundHeaders) throws
+            CreateUserException {
         try {
-            logger.debug("Creating user request from JSON string received");
-            //TODO location has to be stored in mule message outbound property
+            logger.debug("Creating user request from JSON string");
             String location = keycloakClient.createUser(jsonString);
+            outboundHeaders.put("Location", location);
             logger.debug("User was created. Location: {}", location);
         } catch (Exception e) {
             logger.debug("Creating user from JSON string failed. Reason: {}", e.getMessage());
@@ -82,36 +93,60 @@ public class KeycloakConnector {
     }
 
     /**
+     * /**
      * Creates a new user on Keycloak from form data
      *
      * @param email User E-Mail address
      * @param username Username
-     * @param firstname First name
-     * @param lastname Last name
+     * @param firstName First name
+     * @param lastName Last name
      * @param enabled Should user be enabled?
      * @param emailVerified Should the email be set to verified?
-     * @param attributes Custom attribute set
-     * @param realmRoles List of realm roles
-     * @param clientRoles List of client roles
+     * @param totp Time-based One-time Password
+     * @param attributes Custom attribute set map (String, Object)
+     * @param realmRoles List of strings with realm roles
+     * @param outboundHeaders Outbound properties of the current mule message
      * @throws CreateUserException if user creation failes
      */
     @Processor
     public void createUserFromForm(
-            String email,
-            String username,
-            String firstname,
-            String lastname,
-            Boolean enabled,
-            Boolean emailVerified,
-            Boolean totp,
-            Map<String, Object> attributes,
-            List<String> realmRoles,
-            List<String> clientRoles
+            @Placement(tab="General", group="User data", order = 0) @Email String email,
+            @Placement(tab="General", group="User data", order = 1) String username,
+            @Placement(tab="General", group="User data", order = 2) @Optional String password,
+            @Placement(tab="General", group="User data", order = 3) @Optional String firstName,
+            @Placement(tab="General", group="User data", order = 4) @Optional String lastName,
+            @Placement(tab="General", group="User data", order = 5) @Default("false") Boolean enabled,
+            @Placement(tab="General", group="User data", order = 6) @Default("false") Boolean emailVerified,
+            @Placement(tab="General", group="User data", order = 7) @Default("false") Boolean totp,
+            @Placement(tab="General", group="User data", order = 8) @Optional Map<String, Object> attributes,
+            @Placement(tab="General", group="User data", order = 9) @Optional List<String> realmRoles,
+            @OutboundHeaders Map<String, Object> outboundHeaders
     ) throws CreateUserException {
         try {
-            logger.debug("Creating user request from form data reveived");
-            //TODO location has to be stored in mule message outbound property
-            logger.debug("User was created. Location:");
+            logger.debug("Creating user request from form data");
+            UserRepresentation user = new UserRepresentation();
+            user.setEmail(email);
+            user.setUsername(username);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEnabled(enabled);
+            user.setEmailVerified(emailVerified);
+            user.setTotp(totp);
+            user.setAttributes(attributes);
+            user.setRealmRoles(realmRoles);
+            if (password != null) {
+                CredentialRepresentation cred = new CredentialRepresentation();
+                if (totp) {
+                    cred.setType(CredentialRepresentation.TOTP);
+                } else cred.setType(CredentialRepresentation.PASSWORD);
+                cred.setValue(password);
+                List<CredentialRepresentation> creds = new ArrayList<>();
+                creds.add(cred);
+                user.setCredentials(creds);
+            }
+            String location = keycloakClient.createUser(KeycloakAdminConfig.mapper.writeValueAsString(user));
+            outboundHeaders.put("Location", location);
+            logger.debug("User was created. Location: {}", location);
         } catch (Exception e) {
             logger.debug("Creating user from form data failed. Reason: {}", e.getMessage());
             throw new CreateUserException(String.format("Creation of user failed. Reason: %s", e.getMessage()));

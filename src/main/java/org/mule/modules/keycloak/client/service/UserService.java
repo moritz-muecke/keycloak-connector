@@ -42,7 +42,7 @@ public class UserService {
     public String createUser(String userString) throws UserAlreadyExistsException, IOException, CreateUserException {
         KeycloakAdminConfig.mapper.readValue(userString, UserRepresentation.class);
         target = client.target(keycloakConfig.getKeycloakUserUri());
-        logger.debug("Sending create user request to keycloak now");
+        logger.debug("Sending create user request to keycloak now. Request content: {}", userString);
         response = target.request().post(Entity.entity(userString, MediaType.APPLICATION_JSON_TYPE));
         logger.debug("Received status {} due user creation", response.getStatus());
         if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
