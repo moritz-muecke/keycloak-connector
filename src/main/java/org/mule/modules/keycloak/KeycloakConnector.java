@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Connector(name="keycloak", friendlyName="Keycloak")
+@Connector(name = "keycloak", friendlyName = "Keycloak", minMuleVersion = "3.5", description = "Keycloak Connector")
 public class KeycloakConnector {
 
     @Config

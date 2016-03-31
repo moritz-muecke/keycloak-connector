@@ -9,9 +9,11 @@ import org.mule.modules.keycloak.config.ConnectorConfig
 import spock.lang.Specification
 
 /**
- * Created by moritz.moeller on 10.02.2016.
+ * Test specification for the KeycloakClient
+ *
+ * @author Moritz Möller, AOE GmbH
+ *
  */
-
 class KeycloakClientSpec extends Specification {
 
     UserService userService = Mock(UserService)

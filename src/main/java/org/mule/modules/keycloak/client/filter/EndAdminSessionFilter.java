@@ -1,6 +1,8 @@
 package org.mule.modules.keycloak.client.filter;
 
 import org.mule.modules.keycloak.config.KeycloakAdminConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Form;
@@ -12,6 +14,8 @@ import java.io.IOException;
  * Created by moritz.moeller on 11.02.2016.
  */
 public class EndAdminSessionFilter implements ClientResponseFilter {
+
+    private final Logger logger = LoggerFactory.getLogger(EndAdminSessionFilter.class);
 
     private KeycloakAdminConfig config;
     private Client client;
@@ -34,6 +38,14 @@ public class EndAdminSessionFilter implements ClientResponseFilter {
         form.param("refresh_token", config.getTokens().getRefreshToken());
         form.param("client_id", "security-admin-console");
         WebTarget target = client.target(config.getKeycloakAdminLogoutUri());
-        target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+        try {
+            target.request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+        } catch (Exception e) {
+            logger.error("Could not end admin session. Exception {} occurred: {}", e.getClass(), e.getMessage());
+        }
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

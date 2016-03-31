@@ -3,6 +3,8 @@ package org.mule.modules.keycloak.client.filter;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.keycloak.representations.AccessTokenResponse;
 import org.mule.modules.keycloak.config.KeycloakAdminConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Form;
@@ -15,6 +17,7 @@ import java.io.IOException;
  */
 public class AdminSessionFilter implements ClientRequestFilter {
 
+    private final Logger logger = LoggerFactory.getLogger(EndAdminSessionFilter.class);
 
     private KeycloakAdminConfig config;
     private ObjectMapper mapper;
@@ -39,9 +42,22 @@ public class AdminSessionFilter implements ClientRequestFilter {
         form.param("username", config.getAdminUser());
         form.param("password", config.getAdminPassword());
 
-        WebTarget target = client.target(config.getKeycloakAdminTokenUri());
-        String jsonAccessToken = target.request(MediaType.APPLICATION_JSON_TYPE)
-                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
-        return mapper.readValue(jsonAccessToken, AccessTokenResponse.class);
+        try {
+            WebTarget target = client.target(config.getKeycloakAdminTokenUri());
+            String jsonAccessToken = target.request(MediaType.APPLICATION_JSON_TYPE)
+                    .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), String.class);
+            return mapper.readValue(jsonAccessToken, AccessTokenResponse.class);
+        } catch (Exception e) {
+            logger.error("Could not retrieve admin tokens. Exception {} occurred: {}", e.getClass(), e.getMessage());
+            return null;
+        }
+    }
+
+    public void setMapper(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

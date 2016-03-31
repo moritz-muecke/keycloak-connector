@@ -18,7 +18,10 @@ import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.Response
 
 /**
- * Created by moritz.moeller on 10.02.2016.
+ * Test specification for the UserService
+ *
+ * @author Moritz Möller, AOE GmbH
+ *
  */
 class UserServiceSpec extends Specification{
     def config = Mock(KeycloakAdminConfig)

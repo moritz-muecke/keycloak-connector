@@ -1,3 +1,0 @@
-<!-- BEGIN_INCLUDE(keycloak:greet) -->
-    <keycloak:greet keycloakConfig-ref="" friend="#[map-payload:friend]" />
-<!-- END_INCLUDE(keycloak:greet) -->
