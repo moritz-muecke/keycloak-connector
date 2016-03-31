@@ -1,11 +1,10 @@
 package org.mule.modules.keycloak.automation.unit
 
 import org.keycloak.representations.idm.UserRepresentation
-import org.mule.modules.keycloak.exception.UserAlreadyExistsException
-import org.mule.modules.keycloak.exception.UserNotFoundException
 import org.mule.modules.keycloak.client.KeycloakClient
 import org.mule.modules.keycloak.client.service.UserService
-import org.mule.modules.keycloak.config.ConnectorConfig
+import org.mule.modules.keycloak.exception.UserAlreadyExistsException
+import org.mule.modules.keycloak.exception.UserNotFoundException
 import spock.lang.Specification
 
 /**

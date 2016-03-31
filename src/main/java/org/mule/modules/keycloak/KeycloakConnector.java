@@ -1,30 +1,27 @@
 package org.mule.modules.keycloak;
 
+import org.glassfish.jersey.client.ClientConfig;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.mule.api.annotations.display.Password;
+import org.mule.api.annotations.Config;
+import org.mule.api.annotations.Connector;
+import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.display.Placement;
+import org.mule.api.annotations.lifecycle.Start;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Email;
 import org.mule.api.annotations.param.Optional;
 import org.mule.api.annotations.param.OutboundHeaders;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-import org.glassfish.jersey.client.ClientConfig;
-import org.mule.api.annotations.Config;
-import org.mule.api.annotations.Connector;
-import org.mule.api.annotations.Processor;
-
-import org.mule.api.annotations.lifecycle.Start;
 import org.mule.modules.keycloak.client.KeycloakClient;
-import org.mule.modules.keycloak.client.filter.AdminSessionFilter;
-import org.mule.modules.keycloak.client.filter.EndAdminSessionFilter;
 import org.mule.modules.keycloak.client.service.UserService;
 import org.mule.modules.keycloak.config.ConnectorConfig;
 import org.mule.modules.keycloak.config.KeycloakAdminConfig;
-import org.mule.modules.keycloak.exception.*;
+import org.mule.modules.keycloak.exception.CreateUserException;
+import org.mule.modules.keycloak.exception.DeleteUserException;
+import org.mule.modules.keycloak.exception.ReadUserException;
+import org.mule.modules.keycloak.exception.UpdateUserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;

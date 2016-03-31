@@ -1,9 +1,6 @@
 package org.mule.modules.keycloak.automation.unit
 
-import org.codehaus.jackson.map.exc.UnrecognizedPropertyException
 import org.keycloak.representations.idm.CredentialRepresentation
-import org.keycloak.representations.idm.ErrorRepresentation
-import org.keycloak.representations.idm.UserRepresentation
 import org.mule.modules.keycloak.client.service.UserService
 import org.mule.modules.keycloak.config.KeycloakAdminConfig
 import org.mule.modules.keycloak.exception.CreateUserException

@@ -1,18 +1,15 @@
 package org.mule.modules.keycloak.client;
 
-import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.mule.modules.keycloak.KeycloakConnector;
+import org.mule.modules.keycloak.client.service.UserService;
 import org.mule.modules.keycloak.config.KeycloakAdminConfig;
 import org.mule.modules.keycloak.exception.CreateUserException;
 import org.mule.modules.keycloak.exception.UserAlreadyExistsException;
 import org.mule.modules.keycloak.exception.UserNotFoundException;
-import org.mule.modules.keycloak.client.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by moritz.moeller on 10.02.2016.

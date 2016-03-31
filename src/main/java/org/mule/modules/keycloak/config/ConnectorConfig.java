@@ -1,7 +1,7 @@
 package org.mule.modules.keycloak.config;
 
-import org.mule.api.annotations.components.Configuration;
 import org.mule.api.annotations.Configurable;
+import org.mule.api.annotations.components.Configuration;
 import org.mule.api.annotations.display.Password;
 import org.mule.api.annotations.display.Placement;
 import org.mule.api.annotations.param.Default;
