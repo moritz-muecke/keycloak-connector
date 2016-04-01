@@ -13,7 +13,11 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 /**
- * Created by moritz.moeller on 11.02.2016.
+ * This request filter can be registered at the http client. If registered the client obtains an admin access token
+ * from keycloak before sending the request.
+ *
+ * @author Moritz Möller, AOE GmbH
+ *
  */
 public class AdminSessionFilter implements ClientRequestFilter {
 
@@ -29,12 +33,20 @@ public class AdminSessionFilter implements ClientRequestFilter {
         this.mapper = new ObjectMapper();
     }
 
+
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
         config.setTokens(requestAccessToken());
         requestContext.getHeaders().putSingle(HttpHeaders.AUTHORIZATION, "Bearer " + config.getTokens().getToken());
     }
 
+    /**
+     * Calls the token endpoint from keycloak to obtain an access token to perform admin api calls. The tokens are
+     * stored in the KeycloakAdminConfig
+     *
+     * @return The AccessTokenResponse
+     * @throws IOException if there are any connection problems
+     */
     public AccessTokenResponse requestAccessToken() throws IOException {
         Form form = new Form();
         form.param("grant_type", "password");

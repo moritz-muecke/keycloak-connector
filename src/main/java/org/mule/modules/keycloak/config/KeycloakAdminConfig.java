@@ -7,7 +7,11 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 /**
- * Created by moritz.moeller on 10.02.2016.
+ * This config extends the ConnectorConfig with several fields and parameters which are needed for calling the
+ * keycloak API
+ *
+ * @author Moritz Möller, AOE GmbH
+ *
  */
 public class KeycloakAdminConfig {
     private String adminUser;

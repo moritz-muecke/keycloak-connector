@@ -29,6 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This connector provides endpoints to administrate user profiles of the Keycloak Single Sign On Service. It
+ * retrieves admin tokens and attaches them to HTTP request to make valid API calls. The connector provides create,
+ * read, update and delete (CRUD) operations for the user profiles.
+ *
+ * @author Moritz Möller, AOE GmbH
+ *
+ */
 @Connector(name = "keycloak", friendlyName = "Keycloak", minMuleVersion = "3.5", description = "Keycloak Connector")
 public class KeycloakConnector {
 
@@ -53,7 +61,10 @@ public class KeycloakConnector {
     }
 
     /**
-     * Retrieves user from Keycloak by user ID
+     * Retrieves user from Keycloak by its user ID
+     *
+     * {@sample.xml ../../../doc/keycloak.xml.sample keycloak:get-user-by-id}
+     *
      * @param id The id of the user which should be returned
      * @return The JSON representation of an user
      */
@@ -72,6 +83,9 @@ public class KeycloakConnector {
 
     /**
      * Creates a new user on Keycloak from JSON string
+     *
+     * {@sample.xml ../../../doc/keycloak.xml.sample keycloak:create-user-from-json}
+     *
      * @param jsonString The JSON representation of the user
      * @param outboundHeaders Outbound properties of the current mule message
      */
@@ -93,6 +107,8 @@ public class KeycloakConnector {
      * /**
      * Creates a new user on Keycloak from form data
      *
+     * {@sample.xml ../../../doc/keycloak.xml.sample keycloak:create-user-from-form}
+     *
      * @param email User E-Mail address
      * @param username Username
      * @param firstName First name
@@ -103,7 +119,7 @@ public class KeycloakConnector {
      * @param attributes Custom attribute set map (String, Object)
      * @param realmRoles List of strings with realm roles
      * @param outboundHeaders Outbound properties of the current mule message
-     * @throws CreateUserException if user creation failes
+     * @throws CreateUserException if user creation fails
      */
     @Processor
     public void createUserFromForm(
@@ -152,6 +168,9 @@ public class KeycloakConnector {
 
     /**
      * Deletes user on Keycloak by user ID
+     *
+     * {@sample.xml ../../../doc/keycloak.xml.sample keycloak:delete-user-by-id}
+     *
      * @param id The id of the user which should be deleted
      */
     @Processor
@@ -167,12 +186,15 @@ public class KeycloakConnector {
     }
 
     /**
-     * Updates user on Keycloak by user ID
+     * Updates user on Keycloak from JSON string by user ID
+     *
+     * {@sample.xml ../../../doc/keycloak.xml.sample keycloak:update-user-from-json}
+     *
      * @param id The id of the user which should be updated
      * @param jsonString The JSON representation of the user
      */
     @Processor
-    public void updateUserById(String id, String jsonString) throws UpdateUserException {
+    public void updateUserFromJson(String id, String jsonString) throws UpdateUserException {
         try {
             logger.debug("Update request for user with id {} from JSON string received", id);
             keycloakClient.updateUserById(id, jsonString);
@@ -182,6 +204,69 @@ public class KeycloakConnector {
             throw new UpdateUserException(String.format("Update of user %s failed. Reason: %s", id, e.getMessage()));
         }
     }
+
+
+    /**
+     * /**
+     * Updates user on Keycloak from form data
+     *
+     * {@sample.xml ../../../doc/keycloak.xml.sample keycloak:create-user-from-form}
+     *
+     * @param id ID of user which should be updated
+     * @param username Username
+     * @param email Email address of the user
+     * @param password User password
+     * @param firstName First name
+     * @param lastName Last name
+     * @param emailVerified Should the email be set to verified?
+     * @param totp Time-based One-time Password
+     * @param attributes Custom attribute set map (String, Object)
+     * @param realmRoles List of strings with realm roles
+     * @throws UpdateUserException if user update fails
+     */
+    @Processor
+    public void updateUserFromForm(
+            @Placement(tab="General", group="User data", order = 0) String id,
+            @Placement(tab="General", group="User data", order = 1) String username,
+            @Placement(tab="General", group="User data", order = 2) String email,
+            @Placement(tab="General", group="User data", order = 3) @Optional String password,
+            @Placement(tab="General", group="User data", order = 4) @Optional String firstName,
+            @Placement(tab="General", group="User data", order = 5) @Optional String lastName,
+            @Placement(tab="General", group="User data", order = 6) @Default("false") Boolean emailVerified,
+            @Placement(tab="General", group="User data", order = 7) @Default("false") Boolean totp,
+            @Placement(tab="General", group="User data", order = 8) @Optional Map<String, Object> attributes,
+            @Placement(tab="General", group="User data", order = 9) @Optional List<String> realmRoles
+    ) throws UpdateUserException {
+        try {
+            logger.debug("Update request for user with id {} from form data received", id);
+            UserRepresentation user = new UserRepresentation();
+            user.setId(id);
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEmailVerified(emailVerified);
+            user.setTotp(totp);
+            user.setAttributes(attributes);
+            user.setRealmRoles(realmRoles);
+            if (password != null) {
+                CredentialRepresentation cred = new CredentialRepresentation();
+                if (totp) {
+                    cred.setType(CredentialRepresentation.TOTP);
+                } else cred.setType(CredentialRepresentation.PASSWORD);
+                cred.setValue(password);
+                List<CredentialRepresentation> creds = new ArrayList<>();
+                creds.add(cred);
+                user.setCredentials(creds);
+            }
+            keycloakClient.updateUserById(id, KeycloakAdminConfig.mapper.writeValueAsString(user));
+            logger.debug("User with id {} was updated from form data", id);
+        } catch (Exception e) {
+            logger.debug("Updating user with ID {} failed. Reason: {}", id, e.getMessage());
+            throw new UpdateUserException(String.format("Update of user %s failed. Reason: %s", id, e.getMessage()));
+        }
+    }
+
 
     public ConnectorConfig getConfig() {
         return config;

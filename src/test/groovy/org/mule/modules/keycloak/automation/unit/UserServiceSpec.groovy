@@ -116,7 +116,7 @@ class UserServiceSpec extends Specification{
 
         then:
         1 * builder.put(_) >> response
-        2 * response.getStatus() >> Response.Status.NOT_FOUND.getStatusCode()
+        3 * response.getStatus() >> Response.Status.NOT_FOUND.getStatusCode()
         UserNotFoundException exception = thrown()
         exception.message == "User not found"
     }
@@ -166,7 +166,7 @@ class UserServiceSpec extends Specification{
         def userId = "abc123"
 
         when:
-        userService.resetUserPassword(credentials, userId)
+        userService.activateUser(credentials, userId)
 
         then:
         2 * builder.put(_) >> response
@@ -181,7 +181,7 @@ class UserServiceSpec extends Specification{
         def userId = "abc123"
 
         when:
-        userService.resetUserPassword(credentials, userId)
+        userService.activateUser(credentials, userId)
 
         then:
         1 * builder.put(_) >> response

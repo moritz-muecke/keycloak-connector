@@ -11,7 +11,11 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 /**
- * Created by moritz.moeller on 11.02.2016.
+ * This response filter can be registered at the http client. If registered the client ends an admin session at
+ * keycloak after sending the request.
+ *
+ * @author Moritz Möller, AOE GmbH
+ *
  */
 public class EndAdminSessionFilter implements ClientResponseFilter {
 
@@ -33,6 +37,10 @@ public class EndAdminSessionFilter implements ClientResponseFilter {
         }
     }
 
+    /**
+     * Calls the logout endpoint from keycloak with the refresh token from the KeycloakAdminConfig to end the admin
+     * session
+     */
     public void endAdminSession() {
         Form form = new Form();
         form.param("refresh_token", config.getTokens().getRefreshToken());

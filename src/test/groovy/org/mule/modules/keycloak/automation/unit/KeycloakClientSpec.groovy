@@ -43,7 +43,7 @@ class KeycloakClientSpec extends Specification {
 
         then:
         1 * userService.createUser(payload) >> location
-        1 * userService.resetUserPassword(_, "abc123")
+        1 * userService.activateUser(_, "abc123")
     }
 
     def "call user-service to create a user and and throw UserAlreadyExistsException"(){

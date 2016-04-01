@@ -1,0 +1,23 @@
+<!-- BEGIN_INCLUDE(keycloak:get-user-by-id) -->
+<keycloak:get-user-by-id id=""/>
+<!-- END_INCLUDE(keycloak:get-user-by-id) -->
+
+<!-- BEGIN_INCLUDE(keycloak:create-user-from-json) -->
+<keycloak:create-user-from-json jsonString=""/>
+<!-- END_INCLUDE(keycloak:create-user-from-json) -->
+
+<!-- BEGIN_INCLUDE(keycloak:create-user-from-form) -->
+<keycloak:create-user-from-form email="" username=""/>
+<!-- END_INCLUDE(keycloak:create-user-from-form) -->
+
+<!-- BEGIN_INCLUDE(keycloak:delete-user-by-id) -->
+<keycloak:delete-user-by-id id=""/>
+<!-- END_INCLUDE(keycloak:delete-user-by-id) -->
+
+<!-- BEGIN_INCLUDE(keycloak:update-user-from-json) -->
+<keycloak:update-user-from-json id="" jsonString=""/>
+<!-- END_INCLUDE(keycloak:update-user-from-json) -->
+
+<!-- BEGIN_INCLUDE(keycloak:update-user-from-form) -->
+<keycloak:update-user-from-form email="" username="" id=""/>
+<!-- END_INCLUDE(keycloak:update-user-from-form) -->

@@ -22,7 +22,11 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by moritz.moeller on 10.02.2016.
+ * This class is used to call the endpoints of the Keycloak admin API to execute CRUD operations on user profiles
+ *
+ * @author Moritz Möller, AOE GmbH
+ * @see <a href="http://keycloak.github.io/docs/rest-api/">Keycloak Admin API</a>
+ *
  */
 public class UserService {
 
@@ -38,6 +42,16 @@ public class UserService {
         this.client = client;
     }
 
+    /**
+     * Takes a string which contains the JSON representation of a keycloak user profile and sends a http post request
+     * to keycloak to create this user.
+     *
+     * @param userString JSON user representation as string
+     * @return The location of the created user
+     * @throws UserAlreadyExistsException if user already exists
+     * @throws IOException if there are any connection problems
+     * @throws CreateUserException if the response from keycloak contains an error
+     */
     public String createUser(String userString) throws UserAlreadyExistsException, IOException, CreateUserException {
         KeycloakAdminConfig.mapper.readValue(userString, UserRepresentation.class);
         target = client.target(keycloakConfig.getKeycloakUserUri());
@@ -55,6 +69,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Takes the user id and sends a http delete request to keycloak to delete the user linked to the id
+     *
+     * @param userId User to be deleted
+     * @throws UserNotFoundException if user can't be found
+     */
     public void deleteUser(String userId) throws UserNotFoundException {
         target = client.target(keycloakConfig.getKeycloakUserUri()).path(userId);
         logger.debug("Sending delete request for user {} to keycloak now", userId);
@@ -65,6 +85,15 @@ public class UserService {
         }
     }
 
+    /**
+     * Takes a string which contains the JSON representation of a keycloak user profile and the id of a user to
+     * send a http put request to keycloak update the user of the given id
+     *
+     * @param userId User which should be updated
+     * @param userString JSON user representation as string
+     * @throws UserNotFoundException if user can't be found
+     * @throws IOException if there are any connection problems
+     */
     public void updateUser(String userId, String userString) throws UserNotFoundException, IOException {
         KeycloakAdminConfig.mapper.readValue(userString, UserRepresentation.class);
         target = client.target(keycloakConfig.getKeycloakUserUri()).path(userId);
@@ -72,10 +101,20 @@ public class UserService {
         response = target.request().put(Entity.entity(userString, MediaType.APPLICATION_JSON_TYPE));
         logger.debug("Received response status {} update request for user {}", response.getStatus(), userId);
         if (response.getStatus() != Response.Status.NO_CONTENT.getStatusCode()) {
+            logger.debug("Updating User {} failed. Status: {} - Message: {}", userId, response.getStatus(), response
+                    .readEntity(String.class));
             throw new UserNotFoundException("User not found");
         }
     }
 
+    /**
+     * Takes a user id and sends a http get request to keycloak to read the user linked to the id
+     *
+     * @param userId to be read
+     * @return UserRepresentation object
+     * @throws UserNotFoundException if user can't be found
+     * @throws IOException if there are any connection problems
+     */
     public UserRepresentation readUser(String userId) throws IOException, UserNotFoundException {
         target = client.target(keycloakConfig.getKeycloakUserUri()).path(userId);
         logger.debug("Sending read request for user {} to keycloak now", userId);
@@ -86,7 +125,17 @@ public class UserService {
         } else throw new UserNotFoundException("User not found");
     }
 
-    public void resetUserPassword(List<CredentialRepresentation> credentials, String userId) throws
+    /**
+     * Takes a list of credentials and a user id to send a http put request to keycloak to reset the password of the
+     * user from the given id. This is used to activate a recent created user. If this leads to an exception the
+     * recently created user will be deleted
+     *
+     * @param credentials List of credentials
+     * @param userId ID of the user where password reset should be performed
+     * @throws UserNotFoundException if user can't be found
+     * @throws CreateUserException if the user could not be created
+     */
+    public void activateUser(List<CredentialRepresentation> credentials, String userId) throws
             UserNotFoundException, CreateUserException {
         for (CredentialRepresentation cred: credentials){
             try {
@@ -105,11 +154,17 @@ public class UserService {
         }
     }
 
+    /**
+     * Registers the admin session filter to all requests send by the http client
+     */
     public void registerAdminSessionFilter(){
         logger.debug("Create admin session filter registered for HTTP client");
         client.register(new AdminSessionFilter(keycloakConfig));
     }
 
+    /**
+     * Registers the end admin session filter to all responses received by the http client
+     */
     public void registerEndAdminSessionFilter(){
         logger.debug("End admin session filter registered for HTTP client");
         client.register(new EndAdminSessionFilter(keycloakConfig));

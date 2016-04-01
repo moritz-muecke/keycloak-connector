@@ -6,6 +6,13 @@ import org.mule.api.annotations.display.Password;
 import org.mule.api.annotations.display.Placement;
 import org.mule.api.annotations.param.Default;
 
+/**
+ * This is the global connector configuration supported by the anypoint devkit. Configures all necessary parameters
+ * to communicate with keycloak.
+ *
+ * @author Moritz Möller, AOE GmbH
+ *
+ */
 @Configuration(friendlyName = "Configuration")
 public class ConnectorConfig {
 
