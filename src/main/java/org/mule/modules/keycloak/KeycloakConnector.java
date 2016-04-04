@@ -215,11 +215,9 @@ public class KeycloakConnector {
      * @param id ID of user which should be updated
      * @param username Username
      * @param email Email address of the user
-     * @param password User password
      * @param firstName First name
      * @param lastName Last name
      * @param emailVerified Should the email be set to verified?
-     * @param totp Time-based One-time Password
      * @param attributes Custom attribute set map (String, Object)
      * @param realmRoles List of strings with realm roles
      * @throws UpdateUserException if user update fails
@@ -229,11 +227,9 @@ public class KeycloakConnector {
             @Placement(tab="General", group="User data", order = 0) String id,
             @Placement(tab="General", group="User data", order = 1) String username,
             @Placement(tab="General", group="User data", order = 2) String email,
-            @Placement(tab="General", group="User data", order = 3) @Optional String password,
             @Placement(tab="General", group="User data", order = 4) @Optional String firstName,
             @Placement(tab="General", group="User data", order = 5) @Optional String lastName,
             @Placement(tab="General", group="User data", order = 6) @Default("false") Boolean emailVerified,
-            @Placement(tab="General", group="User data", order = 7) @Default("false") Boolean totp,
             @Placement(tab="General", group="User data", order = 8) @Optional Map<String, Object> attributes,
             @Placement(tab="General", group="User data", order = 9) @Optional List<String> realmRoles
     ) throws UpdateUserException {
@@ -246,19 +242,8 @@ public class KeycloakConnector {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setEmailVerified(emailVerified);
-            user.setTotp(totp);
             user.setAttributes(attributes);
             user.setRealmRoles(realmRoles);
-            if (password != null) {
-                CredentialRepresentation cred = new CredentialRepresentation();
-                if (totp) {
-                    cred.setType(CredentialRepresentation.TOTP);
-                } else cred.setType(CredentialRepresentation.PASSWORD);
-                cred.setValue(password);
-                List<CredentialRepresentation> creds = new ArrayList<>();
-                creds.add(cred);
-                user.setCredentials(creds);
-            }
             keycloakClient.updateUserById(id, KeycloakAdminConfig.mapper.writeValueAsString(user));
             logger.debug("User with id {} was updated from form data", id);
         } catch (Exception e) {
