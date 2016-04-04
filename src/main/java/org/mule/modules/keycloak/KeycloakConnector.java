@@ -37,7 +37,7 @@ import java.util.Map;
  * @author Moritz Möller, AOE GmbH
  *
  */
-@Connector(name = "keycloak", friendlyName = "Keycloak", minMuleVersion = "3.5", description = "Keycloak Connector")
+@Connector(name = "keycloak", friendlyName = "Keycloak", minMuleVersion = "3.6.1", description = "Keycloak Connector")
 public class KeycloakConnector {
 
     @Config
