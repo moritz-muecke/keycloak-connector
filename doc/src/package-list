@@ -1,0 +1,13 @@
+org.mule.modules.keycloak
+org.mule.modules.keycloak.client
+org.mule.modules.keycloak.client.filter
+org.mule.modules.keycloak.client.service
+org.mule.modules.keycloak.config
+org.mule.modules.keycloak.exception
+org.mule.modules.keycloak.generated.adapter
+org.mule.modules.keycloak.generated.adapters
+org.mule.modules.keycloak.generated.agents
+org.mule.modules.keycloak.generated.config
+org.mule.modules.keycloak.generated.devkit
+org.mule.modules.keycloak.generated.processors
+org.mule.tooling.ui.contribution
